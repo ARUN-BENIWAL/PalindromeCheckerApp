@@ -1,36 +1,47 @@
+import java.util.Stack;
+
 public class PalindromeCheckerApp {
 
-    // Public method (exposed behavior)
-    public boolean checkPalindrome(String input) {
+    public static void main(String[] args) {
 
-        if (input == null)
-            return false;
+        String word = "madam";
 
-        String normalized = normalize(input);
+        // Inject strategy
+        PalindromeStrategy strategy = new StackStrategy();
 
-        return isPalindrome(normalized);
+        boolean result = strategy.isPalindrome(word);
+
+        if (result) {
+            System.out.println(word + " is a Palindrome");
+        } else {
+            System.out.println(word + " is NOT a Palindrome");
+        }
     }
+}
 
-    // Private helper method (encapsulation)
-    private String normalize(String input) {
-        return input.replaceAll("[^a-zA-Z0-9]", "")
-                .toLowerCase();
-    }
 
-    // Internal palindrome logic (Two-pointer approach)
-    private boolean isPalindrome(String str) {
 
-        int start = 0;
-        int end = str.length() - 1;
+interface PalindromeStrategy {
+    boolean isPalindrome(String text);
+}
 
-        while (start < end) {
-            if (str.charAt(start) != str.charAt(end))
-                return false;
+class StackStrategy implements PalindromeStrategy {
 
-            start++;
-            end--;
+    @Override
+    public boolean isPalindrome(String text) {
+
+        Stack<Character> stack = new Stack<>();
+
+        for (char c : text.toCharArray()) {
+            stack.push(c);
         }
 
-        return true;
+        String reversed = "";
+
+        while (!stack.isEmpty()) {
+            reversed += stack.pop();
+        }
+
+        return text.equals(reversed);
     }
 }
